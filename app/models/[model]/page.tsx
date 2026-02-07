@@ -28,12 +28,12 @@ export default function ModelDetailPage() {
         { id: 2, title: 'Brake Pad Replacement', difficulty: 'Easy', time: '15 min', views: 189 },
         { id: 3, title: 'Battery Calibration', difficulty: 'Medium', time: '30 min', views: 456 },
         { id: 4, title: 'Handlebar Grip Replacement', difficulty: 'Easy', time: '10 min', views: 123 },
-        { id: 5, title: 'E07 Motor Sensor Error', difficulty: 'Hard', time: '1 hour', views: 567 },
+        { id: 5, title: 'E7 Motor Hall Sensor Error', difficulty: 'Hard', time: '1 hour', views: 567 },
         { id: 6, title: 'Throttle Cable Adjustment', difficulty: 'Medium', time: '25 min', views: 345 },
         { id: 7, title: 'Display Screen Replacement', difficulty: 'Medium', time: '35 min', views: 289 },
         { id: 8, title: 'Front Light Not Working', difficulty: 'Easy', time: '15 min', views: 201 },
       ],
-      errorCodes: ['E01', 'E07', 'E10', 'E15'],
+      errorCodes: ['E1', 'E2', 'E3', 'E5', 'E7'],
       videoTutorials: 3
     },
     'pure-pro': {
@@ -57,7 +57,7 @@ export default function ModelDetailPage() {
         { id: 6, title: 'Brake Cable Tension', difficulty: 'Medium', time: '20 min', views: 345 },
         { id: 7, title: 'Stem Bearing Lubrication', difficulty: 'Medium', time: '35 min', views: 267 },
       ],
-      errorCodes: ['E02', 'E07', 'E08', 'E12', 'E20'],
+      errorCodes: ['E1', 'E2', 'E3', 'E4', 'E7', 'E13'],
       videoTutorials: 5
     },
     'advance': {
@@ -82,7 +82,7 @@ export default function ModelDetailPage() {
         { id: 7, title: 'Rear Wheel Bearing Replacement', difficulty: 'Hard', time: '1 hour', views: 512 },
         { id: 8, title: 'Battery BMS Diagnostics', difficulty: 'Hard', time: '50 min', views: 678 },
       ],
-      errorCodes: ['E03', 'E07', 'E08', 'E11', 'E14', 'E22'],
+      errorCodes: ['E1', 'E2', 'E3', 'E4', 'E7', 'E13'],
       videoTutorials: 8
     },
     'air-go': {
@@ -105,7 +105,7 @@ export default function ModelDetailPage() {
         { id: 5, title: 'Handlebar Quick Release Fix', difficulty: 'Easy', time: '10 min', views: 189 },
         { id: 6, title: 'Power Button Replacement', difficulty: 'Medium', time: '35 min', views: 345 },
       ],
-      errorCodes: ['E01', 'E05', 'E10'],
+      errorCodes: ['E1', 'E2', 'E5'],
       videoTutorials: 4
     }
   };
