@@ -1,207 +1,138 @@
 "use client";
 
 import React, { useState } from 'react';
-import { AlertTriangle, Search, Zap, Wrench, CheckCircle } from 'lucide-react';
+import { AlertTriangle, Search, Zap, Wrench, ShieldAlert } from 'lucide-react';
 
 export default function ErrorCodesPage() {
   const [search, setSearch] = useState("");
 
+  // Official Data from PURE Error Code.pdf
   const errorCodes = [
     {
-      code: 'E01',
-      name: 'Throttle Malfunction',
-      severity: 'Medium',
-      description: 'Throttle not responding or stuck',
-      causes: ['Damaged throttle cable', 'Faulty throttle sensor', 'Water damage to throttle assembly'],
-      solutions: [
-        'Check throttle cable for kinks or damage',
-        'Test throttle voltage with multimeter (should be 0.8V-4.2V)',
-        'Replace throttle assembly if faulty',
-        'Ensure all connections are dry and secure'
+      code: 'E1',
+      name: 'Brake Error',
+      severity: 'High',
+      description: 'Signal disrupted between the Brake Lever and the VCU.',
+      causes: [
+        'Electrical Brake Cable not properly connected to VCU.',
+        'Faulty or damaged cable between Brake Lever and VCU.',
+        'Faulty Brake Sensor.',
+        'Fault in the VCU hardware.'
       ],
-      models: ['Pure Air', 'Air Go'],
+      solutions: [
+        'Check connector at the VCU for proper seating.',
+        'Inspect the length of the cable for physical damage.',
+        'Test or replace the Brake Sensor.',
+        'Note: Rear Light fails to brighten if regenerative brake fault exists.'
+      ],
+      models: ['Gen 3', 'Gen 4'],
+      estimatedTime: '20-30 min'
+    },
+    {
+      code: 'E2',
+      name: 'Throttle Error',
+      severity: 'High',
+      description: 'Error detected on the Throttle during riding.',
+      causes: [
+        'Throttle Cable not properly connected to the VCU.',
+        'Faulty or damaged Throttle Signal wire.',
+        'Faulty Throttle Sensor.',
+        'Internal fault in the VCU.'
+      ],
+      solutions: [
+        'Verify connection to VCU.',
+        'Ensure the throttle moves freely and returns to 0 point naturally.',
+        'Power cycle: release throttle, switch off, and restart.',
+        'Note: E2 is for riding errors, F2 is for startup detection.'
+      ],
+      models: ['Gen 3', 'Gen 4'],
+      estimatedTime: '15-20 min'
+    },
+    {
+      code: 'E3',
+      name: 'Communication Error',
+      severity: 'Critical',
+      description: 'Data communication between MCU and VCU failed to transmit.',
+      causes: [
+        'Connector issue at either end of the long communications cable.',
+        'Water-ingress into the cable, VCU, or MCU.',
+        'Damaged four-wire Data Cable running through the steerer.'
+      ],
+      solutions: [
+        'Check plugs at both VCU (top end) and MCU (bottom end).',
+        'If error disappears after power-on, replace damaged connecting wire.',
+        'Inspect VCU and MCU hardware if error persists.'
+      ],
+      models: ['Gen 3', 'Gen 4'],
+      estimatedTime: '45-60 min'
+    },
+    {
+      code: 'E4',
+      name: 'Overcurrent Error',
+      severity: 'Critical',
+      description: 'Over-current condition in the Motor Drive system.',
+      causes: [
+        'Short circuit in the Motor Drive cable.',
+        'MCU Failure (likely if error is continuous).'
+      ],
+      solutions: [
+        'Inspect Motor Drive cable for intermittent shorts.',
+        'Replace MCU if error is reported continuously.'
+      ],
+      models: ['Gen 3', 'Gen 4'],
+      estimatedTime: '1 hour +'
+    },
+    {
+      code: 'E5',
+      name: 'Undervoltage Error',
+      severity: 'Medium',
+      description: 'Battery voltage per cell is below the threshold (near 0%).',
+      causes: [
+        'Faulty, old, or uncharged battery.'
+      ],
+      solutions: [
+        'Try charging the battery until full and reinstall.',
+        'Test with a known good battery to confirm MCU status.'
+      ],
+      models: ['Gen 3', 'Gen 4'],
+      estimatedTime: '10 min + Charging'
+    },
+    {
+      code: 'E7',
+      name: 'Motor Hall Error',
+      severity: 'High',
+      description: 'Hall Sensor on the Motor cannot be detected or abnormal.',
+      causes: [
+        'Failure of one of the Sensors in the Motor unit.',
+        'Fault or damage to the cable between Motor and MCU.',
+        'Failure of the MCU.'
+      ],
+      solutions: [
+        'Check motor cable for kinks or damage.',
+        'Inspect MCU motor phase connections.',
+        'Test with known good motor to isolate issue.'
+      ],
+      models: ['Gen 3', 'Gen 4'],
+      estimatedTime: '1-2 hours'
+    },
+    {
+      code: 'E13',
+      name: 'Battery Comms Error',
+      severity: 'High',
+      description: 'Problem with communication between MCU and Battery.',
+      causes: [
+        'Loose connection between MCU and Battery.',
+        'Fault in the MCU or Battery BMS.'
+      ],
+      solutions: [
+        'Tighten loose connections.',
+        'Replace MCU to test for clearance.',
+        'Replace battery if MCU replacement fails.'
+      ],
+      models: ['Gen 3', 'Gen 4'],
       estimatedTime: '30-45 min'
     },
-    {
-      code: 'E02',
-      name: 'Motor Hall Sensor Error',
-      severity: 'High',
-      description: 'Motor hall sensors not detecting properly',
-      causes: ['Damaged hall sensor wires', 'Water ingress in motor', 'Loose motor connections'],
-      solutions: [
-        'Inspect motor cable for damage or water',
-        'Check hall sensor connector (5-pin)',
-        'Test hall sensors with multimeter',
-        'Replace motor if hall sensors failed'
-      ],
-      models: ['Pure Pro', 'Advance'],
-      estimatedTime: '1-2 hours'
-    },
-    {
-      code: 'E03',
-      name: 'Motor Overcurrent',
-      severity: 'High',
-      description: 'Motor drawing too much current',
-      causes: ['Short circuit in motor', 'Controller malfunction', 'Mechanical resistance (jammed wheel)'],
-      solutions: [
-        'Check for wheel binding or mechanical resistance',
-        'Inspect motor phase wires for shorts',
-        'Test controller output with multimeter',
-        'Replace motor or controller if damaged'
-      ],
-      models: ['Advance'],
-      estimatedTime: '1-3 hours'
-    },
-    {
-      code: 'E05',
-      name: 'Brake Lever Error',
-      severity: 'Low',
-      description: 'Brake lever signal not detected',
-      causes: ['Loose brake lever connector', 'Damaged brake sensor', 'Water in brake assembly'],
-      solutions: [
-        'Check brake lever cable connection',
-        'Test brake sensor with multimeter',
-        'Clean and dry brake sensor contacts',
-        'Replace brake lever if sensor failed'
-      ],
-      models: ['Air Go'],
-      estimatedTime: '15-30 min'
-    },
-    {
-      code: 'E07',
-      name: 'Motor Phase Wire Issue',
-      severity: 'High',
-      description: 'Problem with motor phase connections',
-      causes: ['Disconnected phase wire', 'Damaged motor connector', 'Corroded connections'],
-      solutions: [
-        'Inspect all three motor phase wire connections',
-        'Check for corrosion or loose pins',
-        'Ensure phase wires are properly seated',
-        'Replace motor cable if damaged'
-      ],
-      models: ['Pure Air', 'Pure Pro', 'Advance'],
-      estimatedTime: '45 min - 1 hour'
-    },
-    {
-      code: 'E08',
-      name: 'Controller Communication Error',
-      severity: 'High',
-      description: 'Display cannot communicate with controller',
-      causes: ['Loose communication cable', 'Damaged controller', 'Software corruption'],
-      solutions: [
-        'Check all cable connections between display and controller',
-        'Power cycle the scooter (off for 30 seconds)',
-        'Update controller firmware if available',
-        'Replace controller if communication fails'
-      ],
-      models: ['Pure Pro', 'Advance'],
-      estimatedTime: '30 min - 1 hour'
-    },
-    {
-      code: 'E10',
-      name: 'Battery Communication Error',
-      severity: 'Medium',
-      description: 'Battery not communicating with controller',
-      causes: ['Loose battery connection', 'BMS malfunction', 'Damaged battery cable'],
-      solutions: [
-        'Remove and reseat battery pack',
-        'Clean battery connector contacts',
-        'Check battery voltage (should be 36-42V)',
-        'Replace battery if BMS failed'
-      ],
-      models: ['Pure Air', 'Air Go'],
-      estimatedTime: '20-40 min'
-    },
-    {
-      code: 'E11',
-      name: 'Battery Overvoltage',
-      severity: 'High',
-      description: 'Battery voltage exceeds safe limits',
-      causes: ['Faulty charger', 'BMS malfunction', 'Cell imbalance'],
-      solutions: [
-        'Stop using scooter immediately',
-        'Check charger output voltage (should be 42V)',
-        'Test battery voltage with multimeter',
-        'Replace battery if overvoltage persists'
-      ],
-      models: ['Advance'],
-      estimatedTime: '30 min - diagnosis only'
-    },
-    {
-      code: 'E12',
-      name: 'Battery Undervoltage',
-      severity: 'Low',
-      description: 'Battery voltage too low',
-      causes: ['Battery deeply discharged', 'Old/worn battery', 'Cold weather'],
-      solutions: [
-        'Charge battery fully (may take longer than usual)',
-        'Warm battery to room temperature before charging',
-        'Check for battery degradation',
-        'Replace battery if capacity below 70%'
-      ],
-      models: ['Pure Pro'],
-      estimatedTime: '5 min + charging time'
-    },
-    {
-      code: 'E14',
-      name: 'Temperature Sensor Error',
-      severity: 'Medium',
-      description: 'Controller or motor temperature sensor malfunction',
-      causes: ['Damaged temperature sensor', 'Loose sensor connection', 'Sensor short circuit'],
-      solutions: [
-        'Check temperature sensor connection',
-        'Test sensor resistance (10k ohm at 25°C)',
-        'Replace controller if internal sensor failed',
-        'Ensure proper ventilation around controller'
-      ],
-      models: ['Advance'],
-      estimatedTime: '30-60 min'
-    },
-    {
-      code: 'E15',
-      name: 'Motor Locked',
-      severity: 'High',
-      description: 'Motor cannot rotate',
-      causes: ['Wheel seized or blocked', 'Bearing failure', 'Internal motor damage'],
-      solutions: [
-        'Check for physical obstruction in wheel',
-        'Test wheel rotation manually',
-        'Inspect bearings for wear or damage',
-        'Replace motor if internally seized'
-      ],
-      models: ['Pure Air'],
-      estimatedTime: '1-2 hours'
-    },
-    {
-      code: 'E20',
-      name: 'Display Communication Lost',
-      severity: 'Medium',
-      description: 'Display unit not responding',
-      causes: ['Loose display cable', 'Damaged display connector', 'Display unit failure'],
-      solutions: [
-        'Check display cable connection',
-        'Inspect connector pins for damage',
-        'Power cycle the scooter',
-        'Replace display if connection is good but no response'
-      ],
-      models: ['Pure Pro'],
-      estimatedTime: '20-40 min'
-    },
-    {
-      code: 'E22',
-      name: 'Speed Sensor Error',
-      severity: 'Low',
-      description: 'Speed sensor not reading correctly',
-      causes: ['Dirty speed sensor', 'Magnet misalignment', 'Damaged sensor'],
-      solutions: [
-        'Clean speed sensor and magnet',
-        'Check magnet alignment (should be 2-5mm from sensor)',
-        'Test sensor with multimeter',
-        'Replace speed sensor if faulty'
-      ],
-      models: ['Advance'],
-      estimatedTime: '15-30 min'
-    },
+
   ];
 
   const filteredCodes = errorCodes.filter(error =>
@@ -214,7 +145,8 @@ export default function ErrorCodesPage() {
     switch (severity) {
       case 'Low': return 'bg-emerald-100 text-emerald-700 border-emerald-300';
       case 'Medium': return 'bg-amber-100 text-amber-700 border-amber-300';
-      case 'High': return 'bg-red-100 text-red-700 border-red-300';
+      case 'High': return 'bg-orange-100 text-orange-700 border-orange-300';
+      case 'Critical': return 'bg-red-100 text-red-700 border-red-300';
       default: return 'bg-slate-100 text-slate-700 border-slate-300';
     }
   };
@@ -226,9 +158,14 @@ export default function ErrorCodesPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-extrabold text-slate-900 mb-2 flex items-center gap-3">
             <AlertTriangle className="text-red-500" size={36} />
-            Error Code Reference
+            Pure Error Code Database
           </h1>
-          <p className="text-slate-600">Complete diagnostic guide for Pure Electric scooter error codes</p>
+          <p className="text-slate-600 font-medium">
+            Official Gen 3 and Gen 4 VCU Error Code Reference
+          </p>
+          <p className="text-sm text-slate-500 mt-1">
+            Source: Pure Electric Technical Documentation
+          </p>
         </div>
 
         {/* Search */}
@@ -237,7 +174,7 @@ export default function ErrorCodesPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={20} />
             <input 
               type="text" 
-              placeholder="Search error codes..." 
+              placeholder="Search error codes (E1, E3, Communication, etc.)..." 
               className="w-full pl-12 pr-4 py-4 bg-white border-2 border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-700"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -246,19 +183,25 @@ export default function ErrorCodesPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white border-2 border-slate-200 p-4 rounded-2xl">
             <p className="text-slate-500 text-sm font-bold mb-1">Total Codes</p>
             <p className="text-2xl font-black text-slate-900">{errorCodes.length}</p>
           </div>
           <div className="bg-red-50 border-2 border-red-200 p-4 rounded-2xl">
-            <p className="text-red-600 text-sm font-bold mb-1">High Severity</p>
+            <p className="text-red-600 text-sm font-bold mb-1">Critical</p>
             <p className="text-2xl font-black text-red-700">
+              {errorCodes.filter(e => e.severity === 'Critical').length}
+            </p>
+          </div>
+          <div className="bg-orange-50 border-2 border-orange-200 p-4 rounded-2xl">
+            <p className="text-orange-600 text-sm font-bold mb-1">High Severity</p>
+            <p className="text-2xl font-black text-orange-700">
               {errorCodes.filter(e => e.severity === 'High').length}
             </p>
           </div>
           <div className="bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl">
-            <p className="text-amber-600 text-sm font-bold mb-1">Medium Severity</p>
+            <p className="text-amber-600 text-sm font-bold mb-1">Medium</p>
             <p className="text-2xl font-black text-amber-700">
               {errorCodes.filter(e => e.severity === 'Medium').length}
             </p>
@@ -266,12 +209,12 @@ export default function ErrorCodesPage() {
         </div>
 
         {/* Error Codes List */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           {filteredCodes.map((error) => (
-            <div key={error.code} id={error.code} className="bg-white border-2 border-slate-200 rounded-3xl p-6 scroll-mt-8">
+            <div key={error.code} id={error.code} className="bg-white border-2 border-slate-200 rounded-3xl p-8 scroll-mt-8 hover:border-blue-300 transition-all">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-4">
-                  <div className="bg-red-500 text-white font-black text-xl w-16 h-16 rounded-2xl flex items-center justify-center">
+                  <div className="bg-slate-900 text-white font-black text-2xl w-16 h-16 rounded-2xl flex items-center justify-center">
                     {error.code}
                   </div>
                   <div>
@@ -296,14 +239,14 @@ export default function ErrorCodesPage() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Possible Causes */}
-                <div>
-                  <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
+                <div className="bg-orange-50 p-6 rounded-2xl border-2 border-orange-100">
+                  <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
                     <Zap size={18} className="text-orange-500" />
                     Possible Causes
                   </h4>
-                  <ul className="space-y-1">
+                  <ul className="space-y-2">
                     {error.causes.map((cause, i) => (
-                      <li key={i} className="text-sm text-slate-600 pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-orange-500">
+                      <li key={i} className="text-sm text-slate-700 pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-orange-500 before:font-bold">
                         {cause}
                       </li>
                     ))}
@@ -311,15 +254,15 @@ export default function ErrorCodesPage() {
                 </div>
 
                 {/* Solutions */}
-                <div>
-                  <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
-                    <CheckCircle size={18} className="text-emerald-500" />
-                    Solutions
+                <div className="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100">
+                  <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                    <Wrench size={18} className="text-blue-500" />
+                    Required Fixes
                   </h4>
                   <ol className="space-y-2">
                     {error.solutions.map((solution, i) => (
-                      <li key={i} className="text-sm text-slate-600 pl-6 relative">
-                        <span className="absolute left-0 font-bold text-emerald-600">{i + 1}.</span>
+                      <li key={i} className="text-sm text-slate-700 pl-6 relative">
+                        <span className="absolute left-0 font-bold text-blue-600">{i + 1}.</span>
                         {solution}
                       </li>
                     ))}
@@ -335,6 +278,26 @@ export default function ErrorCodesPage() {
             <p className="text-slate-500">No error codes found matching your search.</p>
           </div>
         )}
+
+        {/* Battery Safety Warning - From Official Documentation */}
+        <div className="mt-12 bg-red-600 p-8 rounded-3xl text-white border-4 border-red-700 shadow-xl">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <ShieldAlert size={64} className="shrink-0 animate-pulse" />
+            <div>
+              <h2 className="text-2xl font-black uppercase tracking-wider mb-2">
+                ⚠️ Battery Safety Protocol
+              </h2>
+              <p className="text-sm opacity-90 leading-relaxed font-medium">
+                Excessive heat, bulging, lumps, leaks, crackling noises, or unusual smells are indicators of a faulty battery. 
+                <strong className="block mt-2">If Vapours, Smoke or Flames are present:</strong>
+                Do not handle. Evacuate the area immediately and contact emergency services.
+              </p>
+              <p className="text-xs opacity-75 mt-2 italic">
+                Source: Pure Electric Safety Documentation
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
