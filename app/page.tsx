@@ -17,8 +17,8 @@ export default function HomePage() {
   const recentRepairs = [
     { title: 'Rear Tyre Puncture', model: 'Pure Air Pro', difficulty: 'Easy', time: '20m', code: null },
     { title: 'Brake Disc Rubbing', model: 'Advance', difficulty: 'Medium', time: '15m', code: null },
-    { title: 'E07 Motor Sensor Error', model: 'Pure Air', difficulty: 'Hard', time: '1h', code: 'E07' },
-    { title: 'Battery Not Charging', model: 'Air Go', difficulty: 'Hard', time: '45m', code: null }
+    { title: 'E7 Motor Hall Error', model: 'Pure Air', difficulty: 'Hard', time: '1h', code: 'E7' },
+    { title: 'E3 Communication Error', model: 'Air Go', difficulty: 'Hard', time: '45m', code: 'E3' }
   ];
 
   return (
